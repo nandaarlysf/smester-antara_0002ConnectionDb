@@ -29,4 +29,7 @@ app.get('/', (req, res) => {
             res.status(500).send("Database Error");
         });
 });        
+app.listen(port, () => {
+   console.log(`CIHUY BERJALAN on port ${port}.`);
+})
 
