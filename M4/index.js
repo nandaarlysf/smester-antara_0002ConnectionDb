@@ -69,5 +69,80 @@ app.get('/api/books/:id', (req, res) => {
 
     res.status(200).json({ success: true, data: buku });
 });
+// ==========================================
+// 3. POST - Tambah buku baru
+// ==========================================
+app.post('/api/books', (req, res) => {
+    const { judul, penulis } = req.body;
 
+    if (!judul || !penulis) {
+        return res.status(400).json({ success: false, message: "Judul dan penulis wajib diisi" });
+    }
+
+    const bukuBaru = {
+        id: databaseBuku.length > 0 ? databaseBuku[databaseBuku.length - 1].id + 1 : 1,
+        judul,
+        penulis
+    };
+
+    databaseBuku.push(bukuBaru);
+
+    res.status(201).json({
+        success: true,
+        message: "Buku berhasil ditambahkan",
+        data: bukuBaru
+    });
+});
+
+// ==========================================
+// 4. PUT - Perbarui data buku berdasarkan ID
+// ==========================================
+app.put('/api/books/:id', (req, res) => {
+    const idBuku = parseInt(req.params.id);
+    const { judul, penulis } = req.body;
+
+    const indexBuku = databaseBuku.findIndex(b => b.id === idBuku);
+
+    if (indexBuku === -1) {
+        return res.status(404).json({ success: false, message: "Buku tidak ditemukan" });
+    }
+
+    // Update data buku
+    databaseBuku[indexBuku] = {
+        ...databaseBuku[indexBuku],
+        judul: judul || databaseBuku[indexBuku].judul,
+        penulis: penulis || databaseBuku[indexBuku].penulis
+    };
+
+    res.status(200).json({
+        success: true,
+        message: "Buku berhasil diperbarui",
+        data: databaseBuku[indexBuku]
+    });
+});
+
+// ==========================================
+// 5. DELETE - Hapus buku berdasarkan ID
+// ==========================================
+app.delete('/api/books/:id', (req, res) => {
+    const idBuku = parseInt(req.params.id);
+    const indexBuku = databaseBuku.findIndex(b => b.id === idBuku);
+
+    if (indexBuku === -1) {
+        return res.status(404).json({ success: false, message: "Buku tidak ditemukan" });
+    }
+
+    // Hapus dari array
+    databaseBuku.splice(indexBuku, 1);
+
+    res.status(200).json({
+        success: true,
+        message: `Buku dengan ID ${idBuku} berhasil dihapus`
+    });
+});
+
+// Jalankan Server
+app.listen(PORT, () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+});
 
