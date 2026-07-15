@@ -32,4 +32,42 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
    console.log(`CIHUY BERJALAN on port ${port}.`);
 })
+//post
+//put
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Middleware agar Express bisa membaca data berformat JSON dari request body
+app.use(express.json());
+
+// Database sementara (Array in-memory)
+let databaseBuku = [
+    { id: 1, judul: "Pemrograman Node.js", penulis: "John Doe" },
+    { id: 2, judul: "Belajar Express JS", penulis: "Jane Doe" }
+];
+// ==========================================
+// 1. GET - Ambil semua data buku
+// ==========================================
+app.get('/api/books', (req, res) => {
+    res.status(200).json({
+        success: true,
+        data: databaseBuku
+    });
+});
+
+// ==========================================
+// 2. GET - Ambil satu buku berdasarkan ID
+// ==========================================
+app.get('/api/books/:id', (req, res) => {
+    const idBuku = parseInt(req.params.id);
+    const buku = databaseBuku.find(b => b.id === idBuku);
+
+    if (!buku) {
+        return res.status(404).json({ success: false, message: "Buku tidak ditemukan" });
+    }
+
+    res.status(200).json({ success: true, data: buku });
+});
+
 
