@@ -1,7 +1,7 @@
 import express from 'express'
 import pg from 'pg'
 const app = express()
-const port = 3000
+const port = 3001
 const { Pool } = pg
 
 app.use(express.json())
@@ -32,6 +32,8 @@ app.get('/', (req, res) => {
 });        
 
 app.listen(port, () => {
-   console.log(`CIHUY BERJALAN on port 3000{port}.`);
+   console.log(`CIHUY BERJALAN on port ${port}.`);
 })
 
+//post
+//put
